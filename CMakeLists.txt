@@ -6,6 +6,6 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(Parser)
 
 add_executable(stypy
-        Parser/lexer.cpp
-        Parser/lexer.h
+        Lexer/lexer.cpp
+        Lexer/lexer.h
         stypy.cpp)
