@@ -2,68 +2,122 @@
 // Created by DorSh on 04-Feb-23.
 //
 
+#include "../Utils/Utils.h"
 #include "Lexer.h"
+#include "Lexer Types.h"
+#include <vector>
 #include <iostream>
 
-const std::string Lexer::Token::keywords[] = {"if", "while"};
-const std::string Lexer::Token::operators[] = {"+", "-", "*", "/"};
-const std::string Lexer::Token::separators[] = {"\r\n", " ", "(", ")"};
-const std::string Lexer::Token::commentSeparators[] = {"/*", "*/", "//"};
-
-static bool checkIfStringsEqualAtIndex(const std::string &textByIndex, const unsigned int index, const std::string &text);
-static unsigned int checkIfSubstringInArray(const std::string &element, const unsigned int index, const std::string array[], const unsigned int arraySize);
+Token getCommentToken(const std::string &string, unsigned int index);
 
 // std::vector<Lexer::Token, std::string> Lexer::lexerText(const std::string &text) {
 void Lexer::lexerText(const std::string &text) {
     // std::vector<Lexer::Token, std::string> tokens;
-    unsigned int currentIndex = 0;
-    std::string currentTokenString;
-    unsigned int textLength = text.length();
-    while (currentIndex <= textLength) {
-        unsigned int isSeparators = checkIfSubstringInArray(text, currentIndex, Lexer::Token::separators, 4);
-        if (isSeparators == 0)// check if the substring in the current index is not a separators
-        {
-            currentTokenString += text[currentIndex];
-            currentIndex++;
-        }
-        else
-        {
-            std::cout << currentTokenString << std::endl;
-            currentTokenString.clear();
-            currentTokenString += text.substr(currentIndex, isSeparators);
-            std::cout << currentTokenString << std::endl;
-            currentTokenString.clear();
+    unsigned int index = 0;
+    while (index < text.length()){
+        Token token = getCommentToken(text, index);
+        /*bool comment_ = iSCharACommentStart(text, index);
+        bool keyword_ = iSCharStartOfAKeyword(text, index);
+        bool operator_ = iSCharAnOperatorStart(text, index);
+        bool separator_ = iSCharASeparatorStart(text, index);
 
-            currentIndex+=isSeparators;
+        if (comment_){
+            std::cout << "here is a comment " << index << std::endl;
         }
+
+        if (keyword_){
+            std::cout << "here is a keyword " << index << std::endl;
+        }
+
+        if (operator_){
+            std::cout << "here is a operator " << index << std::endl;
+        }
+
+        if (separator_){
+            std::cout << "here is a separator " << index << std::endl;
+        }
+        */
+
+        if (token.tokenString.empty()){
+            index++;
+        }else
+        {
+            index += token.tokenString.length();
+            std::cout << token << std::endl;
+        }
+
+
+
     }
-    std::cout << currentTokenString << std::endl;
 
     // return tokens;
 }
 
-// add the current token to the tokens list
-void Lexer::bump(unsigned int currentIndex, const std::string &text, std::vector<Lexer::Token, std::string> tokens) {
+// return a token with a none-empty string if the current substring in the index is a comment starter
+Token getCommentToken(const std::string &string, unsigned int index){
+    unsigned int stringLength = string.length();
+    Token token;
+    token.tokenType = TokenType::Comment;
 
-}
 
-static bool checkIfStringsEqualAtIndex(const std::string &textByIndex, const unsigned int index, const std::string &text){
-    return textByIndex.substr(index, text.length()) == text;
-}
-
-template<typename T> bool CheckIfElementInArray(const T element, const T& array, const unsigned int arraySize){
-    bool isIn = false;
-    for (int i = 0; i < arraySize; i++){
-        isIn |= element == array[i];
-    }
-    return isIn;
-}
-
-static unsigned int checkIfSubstringInArray(const std::string &element, const unsigned int index, const std::string array[], const unsigned int arraySize){
-    for (unsigned int i = 0; i < arraySize; i++){
-        if (checkIfStringsEqualAtIndex(element, index, array[i])){
-            return array[i].length();
+    std::vector<std::string> commentStarter = getMapKeys(stringToComment);
+    std::string commentStarterString;
+    for (const auto & comment : commentStarter){
+        if (string.compare(index, comment.length(), comment) == 0){
+            commentStarterString = comment;
+            break;
         }
     }
-    return 0;
+    if (commentStarterString.empty()){
+        return token;
+    }
+
+    switch (stringToComment[commentStarterString]) {
+        case OneLineStart:
+            token.commentType = CommentTypes::OneLineStart;
+            unsigned int indexCopy = index;
+            do{
+                indexCopy++;
+                char temp = string[indexCopy];
+                int sdfdsf = 0;
+            } while (string[indexCopy] != '\n' && indexCopy <= stringLength);
+            token.tokenString = string.substr(index, indexCopy - index);
+    }
+    return token;
 }
+
+
+/*bool Lexer::iSCharACommentStart(const std::string &string, unsigned int index) {
+    return string[index] == '#';
+}
+
+// check if the char in the specified index is a start of a keyword
+bool Lexer::iSCharStartOfAKeyword(const std::string &string, unsigned int index) {
+    for (const auto & keyword : Lexer::Token::keywords){
+        if (string.compare(index, keyword.length(), keyword) == 0){
+            return true;
+        }
+    }
+    return false;
+}
+
+// check if the char in the specified index is a start of an operator
+bool Lexer::iSCharAnOperatorStart(const std::string& string, unsigned int index) {
+    for (const auto & operator_ : Lexer::Token::operators){
+        if (string.compare(index, operator_.length(), operator_) == 0){
+            return true;
+        }
+    }
+    return false;
+}
+
+// check if the char in the specified index is a start of a separator
+bool Lexer::iSCharASeparatorStart(const std::string &string, unsigned int index) {
+    for (const auto & separator : Lexer::Token::separators){
+        if (string.compare(index, separator.length(), separator) == 0){
+            return true;
+        }
+    }
+    return false;
+}*/
+

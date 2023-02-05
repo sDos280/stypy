@@ -7,29 +7,18 @@
 
 #include <string>
 #include <vector>
+#define  KEYWORDS_COUNT 2
 
 class Lexer {
 public:
-    struct Token {
-        static const std::string keywords[];  // array of all the keywords defined in the language
-        static const std::string operators[];  // array of all the operators defined in the language
-        static const std::string separators[];  // array of all the separator defined in the language
-        static const std::string commentSeparators[];  // array of all the separator defined in the language
 
-        // the type of token
-        enum type {
-            Identifier,
-            Keyword,
-            Separator,
-            Operator,
-            Literal,
-            Comment
-        };
-    };
 
     //static std::vector<Lexer::Token, std::string> lexerText(const std::string &text);
     static void lexerText(const std::string &text);
-    static void bump(unsigned int currentIndex, const std::string &text, std::vector<Lexer::Token, std::string> tokens);
+    static bool iSCharACommentStart(const std::string& string, unsigned int index);
+    static bool iSCharStartOfAKeyword(const std::string &string, unsigned int index);
+    static bool iSCharAnOperatorStart(const std::string& string, unsigned int index);
+    static bool iSCharASeparatorStart(const std::string& string, unsigned int index);
 };
 
 
