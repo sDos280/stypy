@@ -17,4 +17,14 @@ std::vector<K> getMapKeys(const std::map<K, V> &inputMap) {
     return keys;
 }
 
+template <typename T>
+bool isInArray(T value, T arr[], int arrSize) {
+    for (int i = 0; i < arrSize; i++) {
+        if (value == arr[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 #endif //STYPY_UTILS_H

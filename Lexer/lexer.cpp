@@ -3,10 +3,12 @@
 //
 
 #include "../Utils/Utils.h"
-#include "Lexer.h"
-#include "Lexer Types.h"
+#include "lexer.h"
+#include "token.h"
 #include <vector>
 #include <iostream>
+
+bool isWhiteSpace(char Char);
 
 Token getCommentToken(const std::string &string, unsigned int index);
 
@@ -14,7 +16,8 @@ Token getCommentToken(const std::string &string, unsigned int index);
 void Lexer::lexerText(const std::string &text) {
     // std::vector<Lexer::Token, std::string> tokens;
     unsigned int index = 0;
-    while (index < text.length()){
+    while (index < text.length()) {
+        if (isWhiteSpace(text[index])) index++;
         Token token = getCommentToken(text, index);
         /*bool comment_ = iSCharACommentStart(text, index);
         bool keyword_ = iSCharStartOfAKeyword(text, index);
@@ -38,14 +41,12 @@ void Lexer::lexerText(const std::string &text) {
         }
         */
 
-        if (token.tokenString.empty()){
+        if (token.tokenString.empty()) {
             index++;
-        }else
-        {
+        } else {
             index += token.tokenString.length();
             std::cout << token << std::endl;
         }
-
 
 
     }
@@ -54,37 +55,30 @@ void Lexer::lexerText(const std::string &text) {
 }
 
 // return a token with a none-empty string if the current substring in the index is a comment starter
-Token getCommentToken(const std::string &string, unsigned int index){
-    unsigned int stringLength = string.length();
+Token getCommentToken(const std::string &string, unsigned int index) {
     Token token;
-    token.tokenType = TokenType::Comment;
 
+    if (string[index] == '#') // check if a one line comment
+    {
+        token.tokenType = TokenType::Comment;
+        token.tokenKind = TokenKind::OneLineComment;
+        unsigned int commentEnd = string.find('\n', index);
+        std::cout << "start: " << index << " " << "end: " << commentEnd << std::endl;
+        // change index to the last none-white space char index
+        do {
+            commentEnd--;
+        } while (isWhiteSpace(string[commentEnd]));
+        token.tokenString = string.substr(index, commentEnd);
+    }
 
-    std::vector<std::string> commentStarter = getMapKeys(stringToComment);
-    std::string commentStarterString;
-    for (const auto & comment : commentStarter){
-        if (string.compare(index, comment.length(), comment) == 0){
-            commentStarterString = comment;
-            break;
-        }
-    }
-    if (commentStarterString.empty()){
-        return token;
-    }
-
-    switch (stringToComment[commentStarterString]) {
-        case OneLineStart:
-            token.commentType = CommentTypes::OneLineStart;
-            unsigned int indexCopy = index;
-            do{
-                indexCopy++;
-                char temp = string[indexCopy];
-                int sdfdsf = 0;
-            } while (string[indexCopy] != '\n' && indexCopy <= stringLength);
-            token.tokenString = string.substr(index, indexCopy - index);
-    }
     return token;
 }
+
+// check if a char is a white space
+bool isWhiteSpace(char Char) {
+    return isInArray(Char, whiteSpaces, WHITE_SPACES_COUNT);
+}
+
 
 
 /*bool Lexer::iSCharACommentStart(const std::string &string, unsigned int index) {
@@ -120,4 +114,3 @@ bool Lexer::iSCharASeparatorStart(const std::string &string, unsigned int index)
     }
     return false;
 }*/
-
