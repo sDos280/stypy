@@ -25,7 +25,7 @@ enum TokenKind {
     // Comments(syntax)
     // https://www.w3schools.com/python/python_comments.asp
     OneLineComment,  // "#"
-    // TODO: multi-line comments block
+    BlockComment, // "\"\"\"" (3 double quotation mark)
 
     // Keywords
     // https://www.w3schools.com/python/python_ref_keywords.asp
@@ -125,15 +125,16 @@ char whiteSpaces[] = {
 // ----------------------------------------------------------------------------------------------------
 // Token structure
 struct Token {
-    TokenKind tokenKind;
-    TokenType tokenType;
-    std::string tokenString;
+    TokenKind kind;
+    TokenType type;
+    std::string string;
+    size_t size = 0;  // the size of the token string (as in the chars in file)
 };
 
 std::ostream &operator<<(std::ostream &os, const Token &token) {
     std::stringstream ss;
-    ss << "Token type: " << tokenTypeToString[token.tokenType] << std::endl;
-    ss << "Token string: " << token.tokenString << std::endl;
+    ss << "Token type: " << tokenTypeToString[token.type] << std::endl;
+    ss << "Token string: " << token.string << std::endl;
     os << ss.str();
     return os;
 }

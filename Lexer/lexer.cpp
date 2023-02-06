@@ -5,17 +5,16 @@
 #include "../Utils/Utils.h"
 #include "lexer.h"
 #include "token.h"
-#include <vector>
 #include <iostream>
 
 bool isWhiteSpace(char Char);
 
-Token getCommentToken(const std::string &string, unsigned int index);
+Token getCommentToken(const std::string &string, size_t index);
 
 // std::vector<Lexer::Token, std::string> Lexer::lexerText(const std::string &text) {
 void Lexer::lexerText(const std::string &text) {
     // std::vector<Lexer::Token, std::string> tokens;
-    unsigned int index = 0;
+    size_t index = 0;
     while (index < text.length()) {
         if (isWhiteSpace(text[index])) index++;
         Token token = getCommentToken(text, index);
@@ -41,10 +40,10 @@ void Lexer::lexerText(const std::string &text) {
         }
         */
 
-        if (token.tokenString.empty()) {
+        if (token.size == 0) {
             index++;
         } else {
-            index += token.tokenString.length();
+            index += token.size;
             std::cout << token << std::endl;
         }
 
@@ -55,20 +54,34 @@ void Lexer::lexerText(const std::string &text) {
 }
 
 // return a token with a none-empty string if the current substring in the index is a comment starter
-Token getCommentToken(const std::string &string, unsigned int index) {
+Token getCommentToken(const std::string &string, size_t index) {
     Token token;
 
     if (string[index] == '#') // check if a one line comment
     {
-        token.tokenType = TokenType::Comment;
-        token.tokenKind = TokenKind::OneLineComment;
-        unsigned int commentEnd = string.find('\n', index);
-        std::cout << "start: " << index << " " << "end: " << commentEnd << std::endl;
+        token.type = TokenType::Comment;
+        token.kind = TokenKind::OneLineComment;
+        size_t commentEnd = string.find('\n', index);
+        token.size = commentEnd - index;
+
         // change index to the last none-white space char index
         do {
             commentEnd--;
         } while (isWhiteSpace(string[commentEnd]));
-        token.tokenString = string.substr(index, commentEnd);
+        token.string = string.substr(index, (commentEnd + 1) - index);
+    }
+    else if (string[index] == '\"' and string[index + 1] == '\"' and string[index + 1] == '\"')  // check if block comment
+    {
+        token.type = TokenType::Comment;
+        token.kind = TokenKind::BlockComment;
+        size_t commentEnd = string.find(R"(""")", index+3);
+        token.size = (commentEnd + 3) - index;
+
+        // change index to the last none-white space char index
+        do {
+            commentEnd--;
+        } while (isWhiteSpace(string[commentEnd]));
+        token.string = string.substr(index, (commentEnd + 4) - index);
     }
 
     return token;
