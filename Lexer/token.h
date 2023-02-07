@@ -4,7 +4,7 @@
 
 #ifndef STYPY_TOKEN_H
 #define STYPY_TOKEN_H
-#define WHITE_SPACES_COUNT 3
+#define WHITE_SPACES_COUNT 4
 
 #include <map>
 #include <string>
@@ -118,7 +118,8 @@ std::map<std::string, TokenKind> stringToOperator{
 char whiteSpaces[] = {
         ' ',
         '\r',
-        '\013'
+        '\013',
+        '\n'
 };
 // ----------------------------------------------------------------------------------------------------
 
@@ -137,6 +138,13 @@ std::ostream &operator<<(std::ostream &os, const Token &token) {
     ss << "Token string: " << token.string << std::endl;
     os << ss.str();
     return os;
+}
+
+bool isWhiteSpace(char Char);
+
+// check if a char is a white space
+bool isWhiteSpace(char Char) {
+    return isInArray(Char, whiteSpaces, WHITE_SPACES_COUNT);
 }
 
 // ----------------------------------------------------------------------------------------------------
