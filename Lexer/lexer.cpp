@@ -8,25 +8,32 @@
 #include <iostream>
 
 Token getCommentToken(const std::string &string, size_t index);
+Token getKeywordToken(const std::string &string, size_t index);
 
 // std::vector<Lexer::Token, std::string> Lexer::lexerText(const std::string &text) {
 void Lexer::lexerText(const std::string &text) {
     // clean the text from sub strings
-    std::string textCleaned = text;
-    replaceAllSubstring(textCleaned, "\r\n", "\n");
-    replaceAllSubstring(textCleaned, "\r", "");
+    std::string cleandText = text;
+    replaceAllSubstring(cleandText, "\r\n", "\n");
+    replaceAllSubstring(cleandText, "\r", "");
 
     // std::vector<Lexer::Token, std::string> tokens;
     size_t index = 0;
     while (index < text.length()) {
-        if (isWhiteSpace(text[index])) index++;
-        Token token = getCommentToken(text, index);
-
-        if (token.size == 0) {
-            index++;
-        } else {
-            index += token.size;
-            std::cout << token << std::endl;
+        if (isWhiteSpace(cleandText[index])) index++;
+        // the token hierarchy: comment->separator->keyword
+        Token commentToken = getCommentToken(cleandText, index);
+        if (commentToken.size == 0){
+            Token keywordToken = getKeywordToken(cleandText, index);
+            if (keywordToken.size == 0){
+                index++;
+            }else{
+                index += keywordToken.size;
+                std::cout << keywordToken << std::endl;
+            }
+        }else{
+            index += commentToken.size;
+            std::cout << commentToken << std::endl;
         }
 
 
@@ -43,10 +50,15 @@ Token getCommentToken(const std::string &string, size_t index) {
     {
         token.type = TokenType::Comment;
         token.kind = TokenKind::OneLineComment;
-        size_t commentStart = index + 1; // the first index after the "#"
-        size_t commentEnd = string.find('\n', commentStart) - 1; // the last index before "\n"
-        if (commentEnd == std::string::npos) std::cerr << "there is an error" << std::endl;
-        token.size = (commentEnd + 1) - (commentStart - 1);
+        size_t commentStart = index + 1; // the first index after the #
+        size_t commentEnd = string.find('\n', commentStart) - 1; // the last index before \n
+        if (commentEnd == std::string::npos) {
+            std::cerr << "there is an error" << std::endl;
+            token.size = 0;
+        }else{
+            token.size = (commentEnd + 1) - (commentStart - 1);
+        }
+
 
         // change the start index to the first none-white space char index
         while (isWhiteSpace(string[commentStart])) {
@@ -64,8 +76,8 @@ Token getCommentToken(const std::string &string, size_t index) {
     {
         token.type = TokenType::Comment;
         token.kind = TokenKind::BlockComment;
-        size_t commentStart = index + 3;  // the first index after the "\"\"\""
-        size_t commentEnd = string.find(R"(""")", commentStart) - 1; // the last index before the first \" of the comment clock closer
+        size_t commentStart = index + 3;  // the first index after the """
+        size_t commentEnd = string.find(R"(""")", commentStart) - 1; // the last index before the first " of the comment clock closer
         if (commentEnd == std::string::npos) std::cerr << "there is an error" << std::endl;
         token.size = (commentEnd + 3) - (commentStart - 3);
 
@@ -80,6 +92,24 @@ Token getCommentToken(const std::string &string, size_t index) {
         }
 
         token.string = string.substr(commentStart, commentEnd - commentStart + 1);
+    }
+
+    return token;
+}
+
+
+// return a token with a none-empty string if the current substring in the index is keyword starter
+Token getKeywordToken(const std::string &string, size_t index) {
+    Token token;
+
+    for (const auto & keyword : keywordsStrings){
+        if (string.compare(index, keyword.length(), keyword) == 0)  // check if there is a keyword in the current index
+        {
+            token.type = TokenType::Keyword;
+            token.kind = stringToKeyword[keyword];
+            token.size = keyword.length();
+            token.string = keyword;
+        }
     }
 
     return token;

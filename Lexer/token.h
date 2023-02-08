@@ -29,33 +29,47 @@ enum TokenKind {
 
     // Keywords
     // https://www.w3schools.com/python/python_ref_keywords.asp
-    And,     // "add"
-    While,  // "while"
+    And,       // add
+    As,        // as
+    Break,     // break
+    Continue,  // continue
+    Def,       // def
+    Elif,      // elif
+    Else,      // else
+    False,     // False
+    For,       // for
+    If,        // if
+    None,      // None
+    Not,       // not
+    Or,        // or
+    Pass,      // pass
+    Return,    // Return
+    True,      // True
+    While,     // while
     // TODO: add other keywords
 
     // Separators
-    NewLine,           // "\n"
-    CodeLeveler,       // "\t" or "    "  (4 spaces)
-    OpenParenthesis,   // "("
-    CloseParenthesis,  // ")"
-    OpenBracket,       // "]"
-    CloseBracket,      // "["
-    OpenBrace,         // "{"
-    CloseBrace,        // "}"
-    Comma,             // ","
-    Colon,             // ":"
-    Dot,               // "."
-    Semicolon,         // ";"
+    CodeLeveler,       // \t or "    "  (4 spaces)
+    OpenParenthesis,   // (
+    CloseParenthesis,  // )
+    OpenBracket,       // ]
+    CloseBracket,      // [
+    OpenBrace,         // {
+    CloseBrace,        // }
+    Comma,             // ,
+    Colon,             // :
+    Dot,               // .
+    Semicolon,         // ;
 
     // https://www.w3schools.com/python/python_operators.asp
     // Arithmetic Operators
-    Addition,        // "+"
-    Subtraction,     // "-"
-    Multiplication,  // "*"
-    Division,        // "/"
-    Modulus,         // "%"
-    Exponentiation,  // "**"
-    FloorDivision    // "//"
+    Addition,        // +
+    Subtraction,     // -
+    Multiplication,  // *
+    Division,        // /
+    Modulus,         // %
+    Exponentiation,  // **
+    FloorDivision    // //
     // Python Assignment Operators
     // TODO: add assignment operators
 };
@@ -74,18 +88,35 @@ std::map<TokenType, std::string> tokenTypeToString{
 
 // string to comments(syntax) dictionary
 std::map<std::string, TokenKind> stringToComment{
-        {"#", TokenKind::OneLineComment},
+        {"#",      TokenKind::OneLineComment},
+        {R"(""")", TokenKind::BlockComment},
 };
 
 // string to keyword dictionary
 std::map<std::string, TokenKind> stringToKeyword{
-        {"and",   TokenKind::And},
-        {"while", TokenKind::While}
+        {"and",      TokenKind::And},
+        {"as",       TokenKind::As},
+        {"break",    TokenKind::Break},
+        {"continue", TokenKind::Continue},
+        {"def",      TokenKind::Def},
+        {"elif",     TokenKind::Elif},
+        {"else",     TokenKind::Else},
+        {"False",    TokenKind::False},
+        {"for",      TokenKind::For},
+        {"if",       TokenKind::If},
+        {"None",     TokenKind::None},
+        {"not",      TokenKind::Not},
+        {"or",       TokenKind::Or},
+        {"pass",     TokenKind::Pass},
+        {"return",   TokenKind::Return},
+        {"True",     TokenKind::True},
+        {"while",    TokenKind::While}
 };
+
+std::vector<std::string> keywordsStrings = getMapKeys(stringToKeyword);
 
 // string to separator dictionary
 std::map<std::string, TokenKind> stringToSeparator{
-        {"\n",   TokenKind::NewLine},
         {"\t",   TokenKind::CodeLeveler},
         {"    ", TokenKind::CodeLeveler},
         {"(",    TokenKind::OpenParenthesis},
@@ -99,6 +130,8 @@ std::map<std::string, TokenKind> stringToSeparator{
         {".",    TokenKind::Dot},
         {";",    TokenKind::Semicolon}
 };
+
+std::vector<std::string> separatorsStrings = getMapKeys(stringToSeparator);
 
 // string to operator dictionary
 std::map<std::string, TokenKind> stringToOperator{
