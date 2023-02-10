@@ -69,9 +69,40 @@ enum TokenKind {
     Division,        // /
     Modulus,         // %
     Exponentiation,  // **
-    FloorDivision    // //
-    // Python Assignment Operators
-    // TODO: add assignment operators
+    FloorDivision,   // //
+
+    // (One char) Assignment Operators
+    Assignment,              // =
+
+    // Assignment Operators
+    PlusAssignment,                 // +=
+    MinusAssignment,                // -=
+    AsteriskAssignment,             // *=
+    ForwardSlashAssignment,         // /=
+    ModuloAssignment,               // %=
+    DoubleForwardSlashAssignment,   // //=
+    DoubleAsteriskSlashAssignment,  // **=
+    ANDAssignment,                  // &=
+    ORAssignment,                   // |=
+    XORAssignment,                  // ^=
+    RightShiftAssignment,           // >>=
+    LeftShiftAssignment,            // <<=
+
+    // Comparison Operators
+    Equals,                 // ==
+    NotEqual,               // !=
+    GreaterThen,            // >
+    LessThen,               // <
+    GreaterThanOrEqualsTo,  // >=
+    LessThanOrEqualsTo,     // >=
+
+    // Bitwise Operators
+    AND,         // &
+    OR,          // |
+    XOR,         // ^
+    NOT,         // ~
+    RightShift,  // >>
+    LeftShift   // <<
 };
 // ----------------------------------------------------------------------------------------------------
 
@@ -135,17 +166,43 @@ std::vector<std::string> separatorsStrings = getMapKeys(stringToSeparator);
 
 // string to operator dictionary
 std::map<std::string, TokenKind> stringToOperator{
-        // Arithmetic Operators
-        {"+",  TokenKind::Addition},
-        {"-",  TokenKind::Subtraction},
-        {"*",  TokenKind::Multiplication},
-        {"/",  TokenKind::Division},
-        {"%",  TokenKind::Modulus},
-        {"**", TokenKind::Exponentiation},
-        {"//", TokenKind::FloorDivision}
-        // Python Assignment Operators
-        // TODO: add Assignment Operators
+        // the token hierarchy: ThreeChars->TwoChars->OneChar
+        {"**=", TokenKind::DoubleAsteriskSlashAssignment},
+        {"//=", TokenKind::DoubleForwardSlashAssignment},
+        {">>=", TokenKind::RightShiftAssignment},
+        {"<<=", TokenKind::LeftShiftAssignment},
+        {"+=",  TokenKind::PlusAssignment},
+        {"-=",  TokenKind::MinusAssignment},
+        {"*=",  TokenKind::AsteriskAssignment},
+        {"/=",  TokenKind::ForwardSlashAssignment},
+        {"%=",  TokenKind::ModuloAssignment},
+        {"&=",  TokenKind::ANDAssignment},
+        {"|=",  TokenKind::ORAssignment},
+        {"^=",  TokenKind::XORAssignment},
+        {"**",  TokenKind::Exponentiation},
+        {"//",  TokenKind::FloorDivision},
+        {"==",  TokenKind::Equals},
+        {"!=",  TokenKind::NotEqual},
+        {">=",  TokenKind::GreaterThanOrEqualsTo},
+        {">=",  TokenKind::LessThanOrEqualsTo},
+        {">>",  TokenKind::RightShift},
+        {"<<",  TokenKind::LeftShift},
+        {"=",   TokenKind::Assignment},
+        {"+",   TokenKind::Addition},
+        {"-",   TokenKind::Subtraction},
+        {"*",   TokenKind::Multiplication},
+        {"/",   TokenKind::Division},
+        {"%",   TokenKind::Modulus},
+        {">",   TokenKind::GreaterThen},
+        {"<",   TokenKind::LessThen},
+        {"&",   TokenKind::AND},
+        {"|",   TokenKind::OR},
+        {"^",   TokenKind::XOR},
+        {"~",   TokenKind::NOT}
+
 };
+
+std::vector<std::string> OperatorsStrings = getMapKeys(stringToOperator);
 
 // array of all white spaces
 char whiteSpaces[] = {

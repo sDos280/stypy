@@ -9,6 +9,7 @@
 
 Token getCommentToken(const std::string &string, size_t index);
 Token getKeywordToken(const std::string &string, size_t index);
+Token getOperatorToken(const std::string &string, size_t index);
 
 // std::vector<Lexer::Token, std::string> Lexer::lexerText(const std::string &text) {
 void Lexer::lexerText(const std::string &text) {
@@ -21,15 +22,21 @@ void Lexer::lexerText(const std::string &text) {
     size_t index = 0;
     while (index < text.length()) {
         if (isWhiteSpace(cleandText[index])) index++;
-        // the token hierarchy: comment->separator->keyword
+        // the token hierarchy: comment->operator->separator->keyword
         Token commentToken = getCommentToken(cleandText, index);
         if (commentToken.size == 0){
-            Token keywordToken = getKeywordToken(cleandText, index);
-            if (keywordToken.size == 0){
-                index++;
+            Token operatorToken = getOperatorToken(cleandText, index);
+            if (operatorToken.size == 0){
+                Token keywordToken = getKeywordToken(cleandText, index);
+                if (keywordToken.size == 0){
+                    index++;
+                }else{
+                    index += keywordToken.size;
+                    std::cout << keywordToken << std::endl;
+                }
             }else{
-                index += keywordToken.size;
-                std::cout << keywordToken << std::endl;
+                index += operatorToken.size;
+                std::cout << operatorToken << std::endl;
             }
         }else{
             index += commentToken.size;
@@ -109,6 +116,23 @@ Token getKeywordToken(const std::string &string, size_t index) {
             token.kind = stringToKeyword[keyword];
             token.size = keyword.length();
             token.string = keyword;
+        }
+    }
+
+    return token;
+}
+
+// return a token with a none-empty string if the current substring in the index is an operator
+Token getOperatorToken(const std::string &string, size_t index) {
+    Token token;
+
+    for (const auto & operator_ : OperatorsStrings){
+        if (string.compare(index, operator_.length(), operator_) == 0)  // check if there is an operator in the current index
+        {
+            token.type = TokenType::Operator;
+            token.kind = stringToOperator[operator_];
+            token.size = operator_.length();
+            token.string = operator_;
         }
     }
 
