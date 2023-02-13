@@ -148,8 +148,8 @@ std::vector<std::string> keywordsStrings = getMapKeys(stringToKeyword);
 
 // string to separator dictionary
 std::map<std::string, TokenKind> stringToSeparator{
-        {"\t",   TokenKind::CodeLeveler},
         {"    ", TokenKind::CodeLeveler},
+        {"\t",   TokenKind::CodeLeveler},
         {"(",    TokenKind::OpenParenthesis},
         {")",    TokenKind::CloseParenthesis},
         {"[",    TokenKind::OpenBracket},
@@ -202,7 +202,7 @@ std::map<std::string, TokenKind> stringToOperator{
 
 };
 
-std::vector<std::string> OperatorsStrings = getMapKeys(stringToOperator);
+std::vector<std::string> operatorsStrings = getMapKeys(stringToOperator);
 
 // array of all white spaces
 char whiteSpaces[] = {
