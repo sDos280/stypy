@@ -86,7 +86,6 @@ class TokenKind(IntEnum):
 
     # Literals
     StringTokenKind = auto()
-    CharTokenKind = auto()
     IntegerTokenKind = auto()
     FloatTokenKind = auto()
 
@@ -131,7 +130,7 @@ string_to_separator = {
     ";": TokenKind.SemicolonTokenKind
 }
 
-# string to operator  dictionary
+# string to operator dictionary
 string_to_operator = {
     # the token hierarchy: ThreeChars->TwoChars->OneChar
     "**=": TokenKind.DoubleAsteriskSlashAssignmentTokenKind,

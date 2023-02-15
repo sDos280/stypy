@@ -62,7 +62,7 @@ def lexer_text(code: str):
             except ValueError:
                 tokens.append((TokenKind.IntegerTokenKind, number))
 
-        # Handle strings literals
+        # Handle strings literals with " char
         elif char == '\"':
             start = current_index
             current_index += 1
@@ -72,7 +72,7 @@ def lexer_text(code: str):
             string_ = code[start:current_index]
             tokens.append((TokenKind.StringTokenKind, string_))
 
-        # Handle chars literals
+        # Handle chars literals with ' char
         elif char == '\'':
             start = current_index
             current_index += 1
@@ -80,14 +80,22 @@ def lexer_text(code: str):
                 current_index += 1
             current_index += 1
             string_ = code[start:current_index]
-            tokens.append((TokenKind.CharTokenKind, string_))
+            tokens.append((TokenKind.StringTokenKind, string_))
 
         # Handle separators that aren't CodeLevelers
         elif char in "()[]{},:.;":
             tokens.append((string_to_separator[char], char))
             current_index += 1
 
+        # Handle operators
+        elif char in "*/><+-%&|=^!":
+            for operator_string, operator_token_kind in string_to_operator.items():
+                if code[current_index:current_index+len(operator_string)] == operator_string:
+                    print(code[current_index:current_index+len(operator_string)])
+                    tokens.append((operator_token_kind, operator_string))
+                    current_index += len(operator_string)
+
         else:  # we shouldn't get here
             current_index += 1
 
-    print(tokens)
+    [print(t) for t in tokens]

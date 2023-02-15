@@ -25,9 +25,6 @@ if __name__ == '__main__':
             file_string.replace("\r\n", "\n")
             file_string.replace("\r", "")
 
-            for i in range(len(file_string)):
-                print(i, file_string[i])
-
             tokens = Parser.tokenizer.lexer_text(file_string)
 
     except FileNotFoundError:
