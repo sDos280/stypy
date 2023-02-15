@@ -84,6 +84,15 @@ class TokenKind(IntEnum):
     RightShiftTokenKind = auto(),  # >>
     LeftShiftTokenKind = auto()  # <<
 
+    # Literals
+    StringTokenKind = auto()
+    CharTokenKind = auto()
+    IntegerTokenKind = auto()
+    FloatTokenKind = auto()
+
+    # Identifier
+    IdentifierTokenKind = auto()
+
 
 # string to keyword dictionary
 string_to_keyword = {
@@ -108,8 +117,8 @@ string_to_keyword = {
 
 # string to separator dictionary
 string_to_separator = {
-    "\t": TokenKind.CodeLevelerTokenKind,
     "    ": TokenKind.CodeLevelerTokenKind,
+    "\t": TokenKind.CodeLevelerTokenKind,
     "(": TokenKind.OpenParenthesisTokenKind,
     ")": TokenKind.CloseParenthesisTokenKind,
     "[": TokenKind.OpenBracketTokenKind,
@@ -159,6 +168,13 @@ string_to_operator = {
     "~": TokenKind.NOTTokenKind,
 }
 
+class TokenType(IntEnum):
+    Identifier = auto()
+    Keyword = auto()
+    Separator = auto()
+    Operator = auto()
+    Literal = auto()
+    Comment = auto()
 
 class Token:
     def __init__(self):
