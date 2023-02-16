@@ -1,6 +1,6 @@
 import sys
 import pathlib
-import Parser.tokenizer
+import Parser.lexer
 
 def main():
     pass
@@ -25,7 +25,9 @@ if __name__ == '__main__':
             file_string.replace("\r\n", "\n")
             file_string.replace("\r", "")
 
-            tokens = Parser.tokenizer.lexer_text(file_string)
+            lexer = Parser.lexer.lexer(file_string)
+
+            tokens = lexer.lex()
 
     except FileNotFoundError:
         print(f"there isn't a file in the path {path_to_file}")
