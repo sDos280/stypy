@@ -1,5 +1,5 @@
 import string
-from Parser.token import *
+import Parser.token as tk
 
 
 class lexer:
@@ -16,7 +16,7 @@ class lexer:
         self.index += bump_by
 
     def get_substring_by_length(self, start: int, length: int) -> str:
-        return self.text[start:start + length + 1]
+        return self.text[start:start + length]
 
     def get_substring_by_indexes(self, start: int, end: int) -> str:
         return self.text[start:end]
@@ -25,13 +25,18 @@ class lexer:
         """Handle separators that are CodeLevelers"""
         if self.to_skip_handler: return
 
-        if self.first() == "\t":
-            self.tokens.append((TokenKind.CodeLevelerTokenKind, "\t"))
+        if self.first() == "\n":
+            self.tokens.append(tk.Token(tk.TokenType.Separator, tk.TokenKind.NewLine, "\n"))
+            self.bump(1)
+            self.to_skip_handler = True
+
+        elif self.first() == "\t":
+            self.tokens.append(tk.Token(tk.TokenType.Separator, tk.TokenKind.CodeLeveler, "\t"))
             self.bump(1)
             self.to_skip_handler = True
 
         elif self.get_substring_by_length(self.index, 4) == "    " and self.text[self.index + 4] != " ":
-            self.tokens.append((TokenKind.CodeLevelerTokenKind, "    "))
+            self.tokens.append(tk.Token(tk.TokenType.Separator, tk.TokenKind.CodeLeveler, "    "))
             self.bump(4)
             self.to_skip_handler = True
 
@@ -52,7 +57,7 @@ class lexer:
             while self.index < len(self.text) and self.first() != '\n':
                 self.bump(1)
             comment = self.get_substring_by_indexes(start_index, self.index)
-            self.tokens.append((TokenKind.OneLineCommentTokenKind, comment))
+            self.tokens.append(tk.Token(tk.TokenType.Comment, tk.TokenKind.SingleLineComment, comment))
             self.to_skip_handler = True
 
         elif self.get_substring_by_length(self.index, 3) == "\"\"\"":  # block comment
@@ -62,7 +67,7 @@ class lexer:
                 self.bump(1)
             self.bump(1)
             comment = self.get_substring_by_indexes(start_index, self.index)
-            self.tokens.append((TokenKind.BlockCommentTokenKind, comment))
+            self.tokens.append(tk.Token(tk.TokenType.Comment, tk.TokenKind.BlockComment, comment))
             self.to_skip_handler = True
 
     def handle_names(self) -> None:
@@ -74,29 +79,31 @@ class lexer:
             while self.index < len(self.text) and (self.first().isalnum() or self.first() == '_'):
                 self.bump(1)
             name = self.get_substring_by_indexes(start_index, self.index)
-            token_kind = string_to_keyword.get(name)
+            token_kind = tk.string_to_keyword.get(name)
             if token_kind:  # a keyword
-                self.tokens.append((token_kind, name))
+                self.tokens.append(tk.Token(tk.TokenType.Keyword, token_kind, name))
                 self.to_skip_handler = True
             else:  # a identifier
-                self.tokens.append((TokenKind.IdentifierTokenKind, name))
+                self.tokens.append(tk.Token(tk.TokenType.Identifier, tk.TokenKind.Identifier, name))
                 self.to_skip_handler = True
 
     def handle_numbers(self) -> None:
         """Handle numbers literals"""
         if self.to_skip_handler: return
 
+        dot_count = 0
         if self.first().isdigit():
             start_index = self.index
             while start_index < len(self.text) and (self.first().isdigit() or self.first() == '.'):
+                if self.first() == '.': dot_count += 1
+                if dot_count == 2: break
                 self.bump(1)
             number = self.get_substring_by_indexes(start_index, self.index)
-            try:
-                if number.index('.'):
-                    self.tokens.append((TokenKind.FloatTokenKind, number))
-                    self.to_skip_handler = True
-            except ValueError:
-                self.tokens.append((TokenKind.IntegerTokenKind, number))
+            if dot_count == 1:
+                self.tokens.append(tk.Token(tk.TokenType.Literal, tk.TokenKind.Float, number))
+                self.to_skip_handler = True
+            else:
+                self.tokens.append(tk.Token(tk.TokenType.Literal, tk.TokenKind.Integer, number))
                 self.to_skip_handler = True
 
     def handle_strings(self) -> None:
@@ -111,7 +118,7 @@ class lexer:
                 self.bump(1)
             self.bump(1)
             string_ = self.get_substring_by_indexes(start_index, self.index)
-            self.tokens.append((TokenKind.StringTokenKind, string_))
+            self.tokens.append(tk.Token(tk.TokenType.Literal, tk.TokenKind.String, string_))
             self.to_skip_handler = True
 
     def handle_separators(self) -> None:
@@ -119,7 +126,7 @@ class lexer:
         if self.to_skip_handler: return
 
         if self.first() in "()[]{},:.;":
-            self.tokens.append((string_to_separator[self.first()], self.first()))
+            self.tokens.append(tk.Token(tk.TokenType.Separator, tk.string_to_separator[self.first()], self.first()))
             self.bump(1)
             self.to_skip_handler = True
 
@@ -128,9 +135,9 @@ class lexer:
         if self.to_skip_handler: return
 
         if self.first() in "*/><+-%&|=^!":
-            for operator_string, operator_token_kind in string_to_operator.items():
+            for operator_string, operator_token_kind in tk.string_to_operator.items():
                 if self.get_substring_by_length(self.index, len(operator_string)) == operator_string:
-                    self.tokens.append((operator_token_kind, operator_string))
+                    self.tokens.append(tk.Token(tk.TokenType.Operator, operator_token_kind, operator_string))
                     self.bump(len(operator_string))
                     self.to_skip_handler = True
 
@@ -155,43 +162,15 @@ class lexer:
 
             self.handle_operators()
 
+            self.handle_names()
+
             if index_start == self.index:  # we shouldn't get here
                 self.bump(1)
 
-        [print(t) for t in self.tokens]
+    def to_file(self, path):
+        with open(path, "w") as writer:
+            file_string = ""
+            for t in self.tokens:
+                file_string += str(t) + "\n"
 
-
-"""def lexer_text(code: str):
-
-
-    current_index = 0
-    while current_index < len(code):
-
-        # Handle separators that are CodeLevelers
-
-        # Handle whitespaces
-
-        # Handle comments
-
-        # Handle names (variables and keywords)
-
-        # Handle numbers literals
-
-        # Handle strings literals with " char
-
-        # Handle chars literals with ' char
-
-        # Handle separators that aren't CodeLevelers
-
-        # Handle operators
-        elif char in "*/><+-%&|=^!":
-            for operator_string, operator_token_kind in string_to_operator.items():
-                if code[current_index:current_index+len(operator_string)] == operator_string:
-                    print(code[current_index:current_index+len(operator_string)])
-                    tokens.append((operator_token_kind, operator_string))
-                    current_index += len(operator_string)
-
-        else:  # we shouldn't get here
-            current_index += 1
-
-    [print(t) for t in tokens]"""
+            writer.write(file_string)

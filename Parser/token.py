@@ -1,173 +1,165 @@
-from enum import IntEnum, auto
+from enum import Enum, auto
 
 
-class TokenKind(IntEnum):
+# note: TK => Token Type
+
+class TokenKind(Enum):
     # Comments(syntax)
     # https://www.w3schools.com/python/python_comments.asp
-    OneLineCommentTokenKind = auto(),  # "#"
-    BlockCommentTokenKind = auto(),  # "\"\"\"" (3 double quotation mark)
+    SingleLineComment = auto()  # "#"
+    BlockComment = auto()  # """ (3 double quotation mark)
 
     # Keywords
+    # KW -> Keyword
     # https://www.w3schools.com/python/python_ref_keywords.asp
-    AndTokenKind = auto(),  # add
-    AsTokenKind = auto(),  # as
-    BreakTokenKind = auto(),  # break
-    ContinueTokenKind = auto(),  # continue
-    DefTokenKind = auto(),  # def
-    ElifTokenKind = auto(),  # elif
-    ElseTokenKind = auto(),  # else
-    FalseTokenKind = auto(),  # False
-    ForTokenKind = auto(),  # for
-    IfTokenKind = auto(),  # if
-    NoneTokenKind = auto(),  # None
-    NotTokenKind = auto(),  # not
-    OrTokenKind = auto(),  # or
-    PassTokenKind = auto(),  # pass
-    ReturnTokenKind = auto(),  # Return
-    TrueTokenKind = auto(),  # True
-    WhileTokenKind = auto(),  # while
-    # TODO: add other keywords
+    AndKW = auto()  # and
+    BreakKW = auto()  # break
+    ContinueKW = auto()  # continue
+    DefKW = auto()  # def
+    ElifKW = auto()  # elif
+    ElseKW = auto()  # else
+    FalseKW = auto()  # False
+    ForKW = auto()  # for
+    IfKW = auto()  # if
+    NotKW = auto()  # not
+    OrKW = auto()  # or
+    ReturnKW = auto()  # return
+    TrueKW = auto()  # True
+    WhileKW = auto()  # while
 
     # Separators
-    CodeLevelerTokenKind = auto(),  # \t or "    "  (4 spaces)
-    OpenParenthesisTokenKind = auto(),  # (
-    CloseParenthesisTokenKind = auto(),  # )
-    OpenBracketTokenKind = auto(),  # ]
-    CloseBracketTokenKind = auto(),  # [
-    OpenBraceTokenKind = auto(),  # 
-    CloseBraceTokenKind = auto(),  # 
-    CommaTokenKind = auto(),  # ,
-    ColonTokenKind = auto(),  # :
-    DotTokenKind = auto(),  # .
-    SemicolonTokenKind = auto(),  # ;
+    CodeLeveler = auto()  # \t or "    "  (4 spaces)
+    NewLine = auto()  # \n
+    OpenParenthesis = auto()  # (
+    CloseParenthesis = auto()  # )
+    OpenBracket = auto()  # ]
+    CloseBracket = auto()  # [
+    OpenBrace = auto()  # {
+    CloseBrace = auto()  # }
+    Comma = auto()  # ,
+    Colon = auto()  # :
+    Dot = auto()  # .
+    Semicolon = auto()  # ;
 
     # https://www.w3schools.com/python/python_operators.asp
-    # Arithmetic Operators
-    AdditionTokenKind = auto(),  # +
-    SubtractionTokenKind = auto(),  # -
-    MultiplicationTokenKind = auto(),  # *
-    DivisionTokenKind = auto(),  # /
-    ModulusTokenKind = auto(),  # %
-    ExponentiationTokenKind = auto(),  # **
-    FloorDivisionTokenKind = auto(),  # //
-
-    # (One char) Assignment Operators
-    AssignmentTokenKind = auto(),  # =
-
-    # Assignment Operators
-    PlusAssignmentTokenKind = auto(),  # +=
-    MinusAssignmentTokenKind = auto(),  # -=
-    AsteriskAssignmentTokenKind = auto(),  # *=
-    ForwardSlashAssignmentTokenKind = auto(),  # /=
-    ModuloAssignmentTokenKind = auto(),  # %=
-    DoubleForwardSlashAssignmentTokenKind = auto(),  # #=
-    DoubleAsteriskSlashAssignmentTokenKind = auto(),  # **=
-    ANDAssignmentTokenKind = auto(),  # &=
-    ORAssignmentTokenKind = auto(),  # |=
-    XORAssignmentTokenKind = auto(),  # ^=
-    RightShiftAssignmentTokenKind = auto(),  # >>=
-    LeftShiftAssignmentTokenKind = auto(),  # <<=
-
-    # Comparison Operators
-    EqualsTokenKind = auto(),  # ==
-    NotEqualTokenKind = auto(),  # !=
-    GreaterThenTokenKind = auto(),  # >
-    LessThenTokenKind = auto(),  # <
-    GreaterThanOrEqualsToTokenKind = auto(),  # >=
-    LessThanOrEqualsToTokenKind = auto(),  # >=
-
-    # Bitwise Operators
-    ANDTokenKind = auto(),  # &
-    ORTokenKind = auto(),  # |
-    XORTokenKind = auto(),  # ^
-    NOTTokenKind = auto(),  # ~
-    RightShiftTokenKind = auto(),  # >>
-    LeftShiftTokenKind = auto()  # <<
+    DoubleAsteriskEqual = auto()  # **=
+    DoubleForwardSlashEqual = auto()  # //=
+    RightShiftEqual = auto()  # >>=
+    LeftShiftEqual = auto()  # <<=
+    PlusEqual = auto()  # +=
+    MinusEqual = auto()  # -=
+    AsteriskEqual = auto()  # *=
+    ForwardSlashEqual = auto()  # /=
+    PercentEqual = auto()  # %=
+    ANDEqual = auto()  # &=
+    OREqual = auto()  # |=
+    XOREqual = auto()  # ^=
+    DoubleAsterisk = auto()  # **
+    DoubleBackslash = auto()  # //
+    EqualEqual = auto()  # ==
+    NotEqual = auto()  # !=
+    GreaterThanEqual = auto()  # >=
+    LessThanEqual = auto()  # <=
+    RightShift = auto()  # >>
+    LeftShift = auto()  # <<
+    Equal = auto()  # =
+    PlusSign = auto()  # +
+    MinusSign = auto()  # -
+    Asterisk = auto()  # *
+    ForwardSlash = auto()  # /
+    PercentSign = auto()  # %
+    GreaterThen = auto()  # >
+    LessThen = auto()  # <
+    AND = auto()  # &
+    OR = auto()  # |
+    XOR = auto()  # ^
+    NOT = auto()  # ~
 
     # Literals
-    StringTokenKind = auto()
-    IntegerTokenKind = auto()
-    FloatTokenKind = auto()
+    String = auto()
+    Integer = auto()
+    Float = auto()
 
     # Identifier
-    IdentifierTokenKind = auto()
+    Identifier = auto()
 
 
 # string to keyword dictionary
-string_to_keyword = {
-    "and": TokenKind.AndTokenKind,
-    "as": TokenKind.AsTokenKind,
-    "break": TokenKind.BreakTokenKind,
-    "continue": TokenKind.ContinueTokenKind,
-    "def": TokenKind.DefTokenKind,
-    "elif": TokenKind.ElifTokenKind,
-    "else": TokenKind.ElseTokenKind,
-    "False": TokenKind.FalseTokenKind,
-    "for": TokenKind.ForTokenKind,
-    "if": TokenKind.IfTokenKind,
-    "None": TokenKind.NoneTokenKind,
-    "not": TokenKind.NotTokenKind,
-    "or": TokenKind.OrTokenKind,
-    "pass": TokenKind.PassTokenKind,
-    "return": TokenKind.ReturnTokenKind,
-    "True": TokenKind.TrueTokenKind,
-    "while": TokenKind.WhileTokenKind
+string_to_keyword: dict[str, TokenKind] = {
+    # the token hierarchy is by string length
+    "and": TokenKind.AndKW,
+    "break": TokenKind.BreakKW,
+    "continue": TokenKind.ContinueKW,
+    "def": TokenKind.DefKW,
+    "elif": TokenKind.ElifKW,
+    "else": TokenKind.ElseKW,
+    "False": TokenKind.FalseKW,
+    "for": TokenKind.ForKW,
+    "if": TokenKind.IfKW,
+    "not": TokenKind.NotKW,
+    "or": TokenKind.OrKW,
+    "return": TokenKind.ReturnKW,
+    "True": TokenKind.TrueKW,
+    "while": TokenKind.WhileKW,
 }
 
 # string to separator dictionary
-string_to_separator = {
-    "    ": TokenKind.CodeLevelerTokenKind,
-    "\t": TokenKind.CodeLevelerTokenKind,
-    "(": TokenKind.OpenParenthesisTokenKind,
-    ")": TokenKind.CloseParenthesisTokenKind,
-    "[": TokenKind.OpenBracketTokenKind,
-    "]": TokenKind.CloseBracketTokenKind,
-    "{": TokenKind.OpenBraceTokenKind,
-    "}": TokenKind.CloseBraceTokenKind,
-    ",": TokenKind.CommaTokenKind,
-    ":": TokenKind.ColonTokenKind,
-    ".": TokenKind.DotTokenKind,
-    ";": TokenKind.SemicolonTokenKind
+string_to_separator: dict[str, TokenKind] = {
+    # the token hierarchy is by string length
+    "    ": TokenKind.CodeLeveler,
+    "\t": TokenKind.CodeLeveler,
+    "\n": TokenKind.NewLine,
+    "(": TokenKind.OpenParenthesis,
+    ")": TokenKind.CloseParenthesis,
+    "[": TokenKind.OpenBracket,
+    "]": TokenKind.CloseBracket,
+    "{": TokenKind.OpenBrace,
+    "}": TokenKind.CloseBrace,
+    ",": TokenKind.Comma,
+    ":": TokenKind.Colon,
+    ".": TokenKind.Dot,
+    ";": TokenKind.Semicolon,
 }
 
 # string to operator dictionary
-string_to_operator = {
-    # the token hierarchy: ThreeChars->TwoChars->OneChar
-    "**=": TokenKind.DoubleAsteriskSlashAssignmentTokenKind,
-    "//=": TokenKind.DoubleForwardSlashAssignmentTokenKind,
-    ">>=": TokenKind.RightShiftAssignmentTokenKind,
-    "<<=": TokenKind.LeftShiftAssignmentTokenKind,
-    "+=": TokenKind.PlusAssignmentTokenKind,
-    "-=": TokenKind.MinusAssignmentTokenKind,
-    "*=": TokenKind.AsteriskAssignmentTokenKind,
-    "/=": TokenKind.ForwardSlashAssignmentTokenKind,
-    "%=": TokenKind.ModuloAssignmentTokenKind,
-    "&=": TokenKind.ANDAssignmentTokenKind,
-    "|=": TokenKind.ORAssignmentTokenKind,
-    "^=": TokenKind.XORAssignmentTokenKind,
-    "**": TokenKind.ExponentiationTokenKind,
-    "//": TokenKind.FloorDivisionTokenKind,
-    "==": TokenKind.EqualsTokenKind,
-    "!=": TokenKind.NotEqualTokenKind,
-    ">=": TokenKind.GreaterThanOrEqualsToTokenKind,
-    "<=": TokenKind.LessThanOrEqualsToTokenKind,
-    ">>": TokenKind.RightShiftTokenKind,
-    "<<": TokenKind.LeftShiftTokenKind,
-    "=": TokenKind.AssignmentTokenKind,
-    "+": TokenKind.AdditionTokenKind,
-    "-": TokenKind.SubtractionTokenKind,
-    "*": TokenKind.MultiplicationTokenKind,
-    "/": TokenKind.DivisionTokenKind,
-    "%": TokenKind.ModulusTokenKind,
-    ">": TokenKind.GreaterThenTokenKind,
-    "<": TokenKind.LessThenTokenKind,
-    "&": TokenKind.ANDTokenKind,
-    "|": TokenKind.ORTokenKind,
-    "^": TokenKind.XORTokenKind,
-    "~": TokenKind.NOTTokenKind,
+string_to_operator: dict[str, TokenKind] = {
+    # the token hierarchy is by string length
+    "**=": TokenKind.DoubleAsteriskEqual,
+    "//=": TokenKind.DoubleForwardSlashEqual,
+    ">>=": TokenKind.RightShiftEqual,
+    "<<=": TokenKind.LeftShiftEqual,
+    "+=": TokenKind.PlusEqual,
+    "-=": TokenKind.MinusEqual,
+    "*=": TokenKind.AsteriskEqual,
+    "/=": TokenKind.ForwardSlashEqual,
+    "%=": TokenKind.PercentEqual,
+    "&=": TokenKind.ANDEqual,
+    "|=": TokenKind.OREqual,
+    "^=": TokenKind.XOREqual,
+    "**": TokenKind.DoubleAsterisk,
+    "//": TokenKind.DoubleBackslash,
+    "==": TokenKind.EqualEqual,
+    "!=": TokenKind.NotEqual,
+    ">=": TokenKind.GreaterThanEqual,
+    "<=": TokenKind.LessThanEqual,
+    ">>": TokenKind.RightShift,
+    "<<": TokenKind.LeftShift,
+    "=": TokenKind.Equal,
+    "+": TokenKind.PlusSign,
+    "-": TokenKind.MinusSign,
+    "*": TokenKind.Asterisk,
+    "/": TokenKind.ForwardSlash,
+    "%": TokenKind.PercentSign,
+    ">": TokenKind.GreaterThen,
+    "<": TokenKind.LessThen,
+    "&": TokenKind.AND,
+    "|": TokenKind.OR,
+    "^": TokenKind.XOR,
+    "~": TokenKind.NOT,
 }
 
-class TokenType(IntEnum):
+
+class TokenType(Enum):
     Identifier = auto()
     Keyword = auto()
     Separator = auto()
@@ -175,7 +167,14 @@ class TokenType(IntEnum):
     Literal = auto()
     Comment = auto()
 
+
 class Token:
-    def __init__(self):
-        self.kind = None
-        self.string = None
+    def __init__(self, ttype: TokenType, kind: TokenKind, string: str):
+        self.type: TokenType = ttype
+        self.kind: TokenKind = kind
+        self.string: str = string
+
+    def __str__(self):
+        string_ = ""
+        string_ += f"{str(self.kind).split('.')[1]}: {self.string}"
+        return string_
