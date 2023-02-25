@@ -1,6 +1,7 @@
 import sys
 import pathlib
 import Parser.lexer
+import Parser.parser
 
 def main():
     pass
@@ -31,6 +32,10 @@ if __name__ == '__main__':
             lexer.lex()
 
             lexer.to_file(path_lexer_output_to_file)
+
+            parser = Parser.parser.parser(lexer.tokens)
+
+            parser.parse()
 
     except FileNotFoundError:
         print(f"there isn't a file in the path {path_to_file}")

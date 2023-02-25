@@ -6,7 +6,7 @@ class lexer:
     def __init__(self, text: str):
         self.text: str = text
         self.index: int = 0  # char index
-        self.tokens: list[tuple[TokenKind, str]] = []
+        self.tokens: list[Token] = []
         self.to_skip_handler = False
 
     def first(self) -> str:
